@@ -1,109 +1,138 @@
-# data-capture
+# 🌱 EcoTech — Data Capture
 
-API de captação de dados de umidade do solo — **Projeto EcoTech** 🌱
-
-Repositório de teste de uma API simples, feita em Python com Flask, que recebe leituras de umidade de um sensor (como um ESP32), salva os dados em um arquivo CSV e os disponibiliza para visualização em uma página web.
+> API para captação e visualização de dados de **umidade do solo** em tempo real.
 
 ---
 
-## Visão geral
+## 📋 Sobre o Projeto
 
-O fluxo do projeto é:
+O **data-capture** é o backend do **Projeto EcoTech**, uma solução de monitoramento ambiental que expõe uma API REST em Flask para receber, armazenar e consultar leituras de umidade do solo enviadas por sensores (ou simuladas via script). Os dados ficam persistidos em CSV e podem ser visualizados através de um dashboard HTML embutido no próprio repositório.
+
+---
+
+## 🗂️ Estrutura do Repositório
 
 ```
-Sensor (ESP32)  ──HTTP──>  API Flask (main.py)  ──salva──>  umidade.csv
-                                   │
-                                   └──HTTP──>  Página web (index.html)
+data-capture/
+├── main.py            # API Flask — endpoints REST
+├── popular_dados.py   # Script para simular envio de leituras
+├── index.html         # Dashboard web (gráfico + exportação)
+├── umidade.csv        # Arquivo de persistência dos dados
+└── LICENSE
 ```
 
-O sensor envia a umidade lida para a API, a API guarda cada leitura com data e hora, e a página web lê esses dados de volta para exibir o valor atual e o histórico.
+---
+
+## ⚙️ Tecnologias
+
+- **Python 3** + **Flask** + **Flask-CORS**
+- **CSV** para persistência leve dos dados
+- **HTML / JavaScript** no dashboard (sem framework externo)
+- **jsPDF + autoTable** para exportação em PDF direto no navegador
 
 ---
 
-## Estrutura do repositório
+## 🚀 Como Executar
 
-| Arquivo | Descrição |
-|---|---|
-| `main.py` | A API Flask. Recebe, salva e disponibiliza as leituras de umidade. |
-| `popular_dados.py` | Script de teste que envia leituras aleatórias para a API, simulando o sensor. |
-| `index.html` | Página web que exibe a umidade atual e o histórico, atualizando automaticamente. |
-| `umidade.csv` | Arquivo onde as leituras são salvas (criado automaticamente). |
-| `LICENSE` | Licença MIT. |
-
----
-
-## Endpoints da API
-
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/receber?umidade=VALOR` | Recebe e salva uma leitura de umidade. |
-| `GET` | `/dados` | Retorna todas as leituras em formato JSON. |
-| `GET` | `/ultima` | Retorna a leitura mais recente em formato JSON. |
-
----
-
-## Como rodar
-
-### 1. Instale as dependências
+### 1. Clone o repositório
 
 ```bash
-pip install flask flask-cors requests
+git clone https://github.com/paivagpg77/data-capture.git
+cd data-capture
 ```
 
-### 2. Inicie a API
+### 2. Instale as dependências
+
+```bash
+pip install flask flask-cors
+```
+
+### 3. Inicie a API
 
 ```bash
 python main.py
 ```
 
-A API ficará disponível em `http://0.0.0.0:5000`. Deixe essa janela do terminal aberta enquanto usa o projeto.
+A API ficará disponível em `http://0.0.0.0:5000`.
 
-### 3. Gere dados de teste (opcional)
+---
 
-Em **outra** janela de terminal, com a API rodando, execute o script que simula o sensor:
+## 📡 Endpoints da API
+
+| Método | Rota        | Descrição                                   |
+|--------|-------------|---------------------------------------------|
+| `GET`  | `/receber`  | Recebe uma leitura de umidade via query param |
+| `GET`  | `/dados`    | Retorna todas as leituras armazenadas (JSON) |
+| `GET`  | `/ultima`   | Retorna a leitura mais recente (JSON)        |
+
+### Exemplo de envio de leitura
+
+```
+GET /receber?umidade=65
+```
+
+**Resposta:** `Dados salvos com sucesso` (HTTP 200)
+
+### Exemplo de retorno de `/ultima`
+
+```json
+{
+  "data_hora": "2025-06-01 14:32:10",
+  "umidade": "65"
+}
+```
+
+---
+
+## 🧪 Simulando Dados com `popular_dados.py`
+
+Para testar a API sem um sensor físico, utilize o script de população:
 
 ```bash
 python popular_dados.py
 ```
 
-Ele envia 20 leituras aleatórias de umidade, uma a cada 2 segundos.
+O script envia **20 leituras aleatórias** (entre 30% e 90%) para a API com intervalo de 2 segundos entre cada envio. Antes de rodar, certifique-se de que o endereço `API_URL` no arquivo aponta para o IP correto da sua máquina.
 
-### 4. Veja os dados
-
-Abra o arquivo `index.html` no navegador. A página mostra a umidade atual e o histórico das últimas leituras, atualizando sozinha a cada poucos segundos.
-
----
-
-## Configuração do endereço (IP)
-
-O endereço da API depende de **onde** está rodando o programa que se conecta a ela:
-
-- **Testando tudo no mesmo computador:** use `http://127.0.0.1:5000`. Esse endereço sempre aponta para a própria máquina e nunca muda.
-- **Conectando de outro aparelho** (celular, ESP32): use o IP real do computador na rede local (algo como `http://192.168.x.x:5000`). Descubra esse IP com `ipconfig` (Windows) ou `ip addr` (Linux). Os dois aparelhos precisam estar na **mesma rede Wi-Fi**.
+```python
+# popular_dados.py — ajuste conforme necessário
+API_URL = "http://192.168.0.110:5000"
+```
 
 ---
 
-## Observações
+## 🖥️ Dashboard Web
 
-- A API funciona na rede local e **não precisa de internet** para operar.
-- Na primeira execução, o Windows pode pedir permissão de firewall para a porta 5000 — é necessário permitir o acesso.
-- O armazenamento em CSV é adequado para testes. Para uso prolongado, recomenda-se migrar para um banco de dados (por exemplo, SQLite).
-- Esta é uma API de teste, sem autenticação. Evite expô-la em redes públicas.
+Abra o arquivo `index.html` no navegador para visualizar o dashboard. Ele se conecta automaticamente à API e atualiza os dados a cada **5 segundos**.
 
----
+**Funcionalidades do dashboard:**
+- Leitura atual de umidade em destaque
+- Histórico das últimas 10 leituras em tabela
+- Campo para configurar o endereço da API dinamicamente
+- Exportação dos dados em **PDF** (gerado no próprio navegador via jsPDF)
+- Download direto em **CSV** (com suporte a acentos no Excel/Google Sheets)
+- Integração com **Google Sheets** via Service Account
 
-## Tecnologias
-
-- Python
-- Flask + Flask-CORS
-- HTML / CSS / JavaScript
-
----
-
-## Licença
-
-Distribuído sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+> **Atenção:** o campo de endereço da API no dashboard vem preenchido com `http://192.168.0.110:5000` por padrão. Altere para o IP da sua máquina na rede local antes de usar.
 
 ---
 
-Projeto desenvolvido como parte do **EcoTech**, com a intenção de melhorar a qualidade da sua horta. 🌾
+## 📤 Exportação para Google Sheets
+
+Para enviar os dados diretamente para uma planilha do Google:
+
+1. Acesse o [Google Cloud Console](https://console.cloud.google.com) e crie um projeto
+2. Ative a **Google Sheets API**
+3. Crie uma **Service Account** e baixe o JSON de credenciais
+4. Compartilhe sua planilha com o e-mail da Service Account
+5. No dashboard, clique em **🔗 Google Sheets**, cole o ID da planilha e o JSON de credenciais
+
+---
+
+## 📄 Licença
+
+Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
+
+---
+
+> Projeto desenvolvido como parte do **Projeto EcoTech** 🌍
