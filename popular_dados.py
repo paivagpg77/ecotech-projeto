@@ -3,7 +3,7 @@ import random
 import time
 
 # Endereço da sua API (mesmo IP que aparece quando você roda o servidor.py)
-API_URL = "http://192.168.137.97:5000"
+API_URL = "http://192.168.0.110:5000"
 
 # Quantas leituras enviar e o intervalo entre elas (em segundos)
 QUANTIDADE = 20

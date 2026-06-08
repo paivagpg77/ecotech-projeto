@@ -56,7 +56,7 @@
 
     <div class="config">
       <label for="url">Endereço da API</label>
-      <input id="url" type="text" value="http://192.168.137.164:5000" />
+      <input id="url" type="text" value="" />
       <button onclick="salvarUrl()">Conectar</button>
     </div>
 
@@ -74,7 +74,7 @@
   </div>
 
   <script>
-    let API_BASE_URL = "http://192.168.137.164:5000";
+    let API_BASE_URL = "http://192.168.0.110:5000";
 
     function salvarUrl() {
       API_BASE_URL = document.getElementById("url").value.trim();

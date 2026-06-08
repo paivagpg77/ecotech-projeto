@@ -1,17 +1,19 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import csv
 import os
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 ARQUIVO_CSV = "umidade.csv"
 
-# Cria o arquivo com cabeçalho se não existir
 if not os.path.exists(ARQUIVO_CSV):
     with open(ARQUIVO_CSV, "w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.writer(arquivo)
         escritor.writerow(["data_hora", "umidade"])
+
 
 @app.route("/receber", methods=["GET"])
 def receber():
@@ -28,6 +30,42 @@ def receber():
         ])
 
     return "Dados salvos com sucesso", 200
+
+
+@app.route("/dados", methods=["GET"])
+def dados():
+    lista = []
+
+    with open(ARQUIVO_CSV, "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+
+        for linha in leitor:
+            lista.append({
+                "data_hora": linha["data_hora"],
+                "umidade": linha["umidade"]
+            })
+
+    return jsonify(lista)
+
+
+@app.route("/ultima", methods=["GET"])
+def ultima():
+    lista = []
+
+    with open(ARQUIVO_CSV, "r", encoding="utf-8") as arquivo:
+        leitor = csv.DictReader(arquivo)
+
+        for linha in leitor:
+            lista.append({
+                "data_hora": linha["data_hora"],
+                "umidade": linha["umidade"]
+            })
+
+    if len(lista) == 0:
+        return jsonify({"erro": "sem dados"}), 404
+
+    return jsonify(lista[-1])
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
