@@ -36,5 +36,5 @@ CREATE TABLE leituras (
   sensor_id UUID          NOT NULL REFERENCES sensores(id),
   planta_id UUID          REFERENCES plantas(id),
   umidade   NUMERIC(5,2)  NOT NULL,
-  data_hora TIMESTAMP     NOT NULL DEFAULT NOW()
+  data_hora TIMESTAMP     NOT NULL DEFAULT NOW() 
 ); 

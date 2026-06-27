@@ -35,4 +35,4 @@ Table leituras {
   planta_id  uuid         [ref: > plantas.id]
   umidade    numeric(5,2) [not null]
   data_hora  timestamp    [not null]
-} 
+}  
