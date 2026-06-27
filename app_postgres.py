@@ -11,11 +11,11 @@ CORS(app)
 
 # ─── CONEXÃO POSTGRESQL ───────────────────────────────────────────────────────
 DB_CONFIG = {
-    "host":     os.getenv("DB_HOST",     "localhost"),
-    "port":     os.getenv("DB_PORT",     "5432"),
-    "dbname":   os.getenv("DB_NAME",     "ecotech"),
-    "user":     os.getenv("DB_USER",     "postgres"),
-    "password": os.getenv("DB_PASSWORD", "sua_senha"),
+    "host":     "localhost",
+    "port":     "5432",
+    "dbname":   "ecotech",
+    "user":     "postgres",
+    "password": "ga454750!",
 }
 
 def get_conn():
@@ -60,13 +60,9 @@ def ler_todos(sensor_id=None, limit=None):
 # ─── RECEBER LEITURA DO ESP32 ─────────────────────────────────────────────────
 @app.route("/receber", methods=["GET"])
 def receber():
-    """
-    ESP32 chama: GET /receber?umidade=65.4&sensor_id=uuid-do-sensor
-    Postman:     GET http://localhost:5000/receber?umidade=65.4&sensor_id=<uuid>
-    """
     umidade   = request.args.get("umidade")
     sensor_id = request.args.get("sensor_id")
-    planta_id = request.args.get("planta_id")  # opcional
+    planta_id = request.args.get("planta_id")
 
     if umidade is None:
         return jsonify({"erro": "Parâmetro 'umidade' não informado"}), 400
@@ -91,18 +87,9 @@ def receber():
         return jsonify({"erro": str(e)}), 500
 
 
-# ─── ROTA POST (alternativa mais RESTful) ────────────────────────────────────
+# ─── ROTA POST ────────────────────────────────────────────────────────────────
 @app.route("/leitura", methods=["POST"])
 def salvar_leitura():
-    """
-    Postman: POST http://localhost:5000/leitura
-    Body JSON:
-    {
-        "sensor_id": "uuid-do-sensor",
-        "umidade": 65.4,
-        "planta_id": "uuid-da-planta"  (opcional)
-    }
-    """
     dados = request.get_json()
     if not dados or "sensor_id" not in dados or "umidade" not in dados:
         return jsonify({"erro": "Informe 'sensor_id' e 'umidade' no body"}), 400
@@ -128,10 +115,6 @@ def salvar_leitura():
 # ─── LISTAR DADOS ─────────────────────────────────────────────────────────────
 @app.route("/dados", methods=["GET"])
 def dados():
-    """
-    Postman: GET http://localhost:5000/dados
-             GET http://localhost:5000/dados?sensor_id=<uuid>&limit=50
-    """
     sensor_id = request.args.get("sensor_id")
     limit     = request.args.get("limit", 100, type=int)
     return jsonify(ler_todos(sensor_id=sensor_id, limit=limit))
@@ -140,10 +123,6 @@ def dados():
 # ─── ÚLTIMA LEITURA ───────────────────────────────────────────────────────────
 @app.route("/ultima", methods=["GET"])
 def ultima():
-    """
-    Postman: GET http://localhost:5000/ultima
-             GET http://localhost:5000/ultima?sensor_id=<uuid>
-    """
     sensor_id = request.args.get("sensor_id")
     lista = ler_todos(sensor_id=sensor_id, limit=1)
     if not lista:
@@ -154,9 +133,6 @@ def ultima():
 # ─── SENSORES ─────────────────────────────────────────────────────────────────
 @app.route("/sensores", methods=["GET"])
 def listar_sensores():
-    """
-    Postman: GET http://localhost:5000/sensores
-    """
     try:
         conn = get_conn()
         cur  = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -171,16 +147,6 @@ def listar_sensores():
 
 @app.route("/sensores", methods=["POST"])
 def criar_sensor():
-    """
-    Postman: POST http://localhost:5000/sensores
-    Body JSON:
-    {
-        "usuario_id": "uuid",
-        "nome": "Sensor Horta",
-        "mac_address": "AA:BB:CC:DD:EE:FF",
-        "local": "Horta do quintal"
-    }
-    """
     dados = request.get_json()
     if not dados or "usuario_id" not in dados or "nome" not in dados:
         return jsonify({"erro": "Informe 'usuario_id' e 'nome'"}), 400
@@ -209,9 +175,6 @@ def criar_sensor():
 # ─── EXPORTAR PDF ─────────────────────────────────────────────────────────────
 @app.route("/exportar/pdf", methods=["GET"])
 def exportar_pdf():
-    """
-    Postman: GET http://localhost:5000/exportar/pdf?sensor_id=<uuid>
-    """
     try:
         from reportlab.lib.pagesizes import A4
         from reportlab.lib import colors
@@ -285,9 +248,6 @@ def exportar_pdf():
 # ─── EXPORTAR CSV ─────────────────────────────────────────────────────────────
 @app.route("/exportar/csv", methods=["GET"])
 def exportar_csv():
-    """
-    Postman: GET http://localhost:5000/exportar/csv?sensor_id=<uuid>
-    """
     import csv as csv_mod
     sensor_id = request.args.get("sensor_id")
     lista     = ler_todos(sensor_id=sensor_id)

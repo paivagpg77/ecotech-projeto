@@ -60,7 +60,7 @@ def ultima():
     garantir_csv()
 
     lista = []
-
+ 
     with open(ARQUIVO_CSV, "r", encoding="utf-8") as arquivo:
         leitor = csv.DictReader(arquivo)
 

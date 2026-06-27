@@ -37,4 +37,4 @@ CREATE TABLE leituras (
   planta_id UUID          REFERENCES plantas(id),
   umidade   NUMERIC(5,2)  NOT NULL,
   data_hora TIMESTAMP     NOT NULL DEFAULT NOW()
-);
+); 

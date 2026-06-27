@@ -20,4 +20,4 @@ for i in range(1, QUANTIDADE + 1):
         print(f"[{i}/{QUANTIDADE}] ERRO ao conectar: {e}")
     time.sleep(INTERVALO)
 
-print("\nPronto! Abra o umidade.html para ver os dados.")
+print("\nPronto! Abra o umidade.html para ver os dados.") 

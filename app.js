@@ -45,7 +45,7 @@ function logout() {
   document.getElementById("appShell").classList.remove("visible");
   document.getElementById("loginScreen").style.display = "flex";
   document.getElementById("loginUser").value = "";
-  document.getElementById("loginPass").value = "";
+  document.getElementById("loginPass").value = ""; 
 }
 
 // ═══════════════════════════════════════════════════════
