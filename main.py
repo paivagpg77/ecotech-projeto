@@ -66,7 +66,7 @@ def ultima():
 
         for linha in leitor:
             if "data_hora" in linha and "umidade" in linha:
-                lista.append({
+                lista.append({  
                     "data_hora": linha["data_hora"],
                     "umidade": linha["umidade"]
                 })

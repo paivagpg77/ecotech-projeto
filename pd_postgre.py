@@ -23,6 +23,6 @@ for i in range(1, QUANTIDADE + 1):
         print(f"[{i}/{QUANTIDADE}] ERRO ao conectar: {e}")
     time.sleep(INTERVALO)
 
-print("\nPronto! Verifique os dados no Postman:")
+print("\nPronto! Verifique os dados no Postman:")  
 print(f"  GET {API_URL}/dados")
 print(f"  GET {API_URL}/ultima") 

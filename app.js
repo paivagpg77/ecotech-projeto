@@ -38,7 +38,7 @@ function fazerLogin() {
   atualizarBadge();
   iniciarBusca();
 }
-
+  
 function logout() {
   clearInterval(timerBusca);
   usuarioLogado = null;
