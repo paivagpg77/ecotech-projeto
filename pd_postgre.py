@@ -25,4 +25,4 @@ for i in range(1, QUANTIDADE + 1):
 
 print("\nPronto! Verifique os dados no Postman:")
 print(f"  GET {API_URL}/dados")
-print(f"  GET {API_URL}/ultima")
+print(f"  GET {API_URL}/ultima") 
