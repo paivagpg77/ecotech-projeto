@@ -1,0 +1,38 @@
+Table usuarios {
+  id  uuid [pk]
+  nome varchar(100) [not null]
+  email varchar(150) [not null, unique]
+  senha_usuario varchar(255) [not null]
+  tipo_usuario  varchar(20)  [not null]
+  criado_em timestamp    [not null]
+  ultimo_acesso timestamp
+}
+
+Table sensores {
+  id uuid [pk]
+  usuario_id  uuid [not null, ref: > usuarios.id]
+  nome  varchar(100) [not null]
+  mac_address varchar(17)  [unique]
+  local varchar(150)
+  ativo boolean  [not null]
+  criado_em   timestamp [not null]
+}
+
+Table plantas {
+  id  uuid [pk]
+  usuario_id   uuid  [not null, ref: > usuarios.id]
+  nome  varchar(100) [not null]
+  especie varchar(150)
+  icone varchar(10)
+  umidade_min  smallint  [not null]
+  umidade_max  smallint [not null]
+  criado_em timestamp [not null]
+}
+
+Table leituras {
+  id  uuid [pk]
+  sensor_id  uuid [not null, ref: > sensores.id]
+  planta_id  uuid         [ref: > plantas.id]
+  umidade    numeric(5,2) [not null]
+  data_hora  timestamp    [not null]
+}
