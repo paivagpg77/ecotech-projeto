@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "ecotech")
@@ -322,13 +324,17 @@ PLANTAS_NORDESTE = [
 ]
 
 def conectar_db():
-    return psycopg2.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
+    """Conecta ao banco de dados PostgreSQL (Render ou local)"""
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL)
+    else:
+        return psycopg2.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD
+        )
 
 def criar_tabela():
     """Cria tabela se não existir"""
@@ -412,6 +418,11 @@ def contar_plantas():
 
 if __name__ == "__main__":
     print("\n🌱 POPULANDO BANCO COM 300 PLANTAS DO NORDESTE\n")
+    
+    if DATABASE_URL:
+        print("🌐 Conectando ao banco de PRODUÇÃO (Render)...\n")
+    else:
+        print("💻 Conectando ao banco LOCAL...\n")
     
     criar_tabela()
     inserir_plantas()
