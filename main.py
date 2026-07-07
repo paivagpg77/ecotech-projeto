@@ -13,10 +13,12 @@ app = Flask(__name__)
 CORS(app)
 
 ARQUIVO_CSV = "umidade.csv"
- 
+
 # ═══════════════════════════════════════════════════════
 # CONFIGURAÇÃO DO BANCO DE DADOS
 # ═══════════════════════════════════════════════════════
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "ecotech")
@@ -24,15 +26,20 @@ DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 def conectar_db():
-    """Conecta ao banco de dados PostgreSQL"""
+    """Conecta ao banco de dados PostgreSQL (Render ou local)"""
     try:
-        return psycopg2.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            database=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD
-        )
+        if DATABASE_URL:
+            # Produção (Render) - usa a URL completa
+            return psycopg2.connect(DATABASE_URL)
+        else:
+            # Local - usa variáveis separadas
+            return psycopg2.connect(
+                host=DB_HOST,
+                port=DB_PORT,
+                database=DB_NAME,
+                user=DB_USER,
+                password=DB_PASSWORD
+            )
     except Exception as e:
         print(f"Erro ao conectar ao banco: {e}")
         return None
@@ -154,6 +161,251 @@ def total_plantas():
         print(f"Erro ao contar plantas: {e}")
         return jsonify({"erro": str(e)}), 500
 
+
+# ═══════════════════════════════════════════════════════════════════════════
+# AUTENTICAÇÃO (Usuários)
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """Registra um novo usuário"""
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        senha = data.get('senha', '')
+        email = data.get('email', '').strip()
+        
+        if not username or not senha:
+            return jsonify({"erro": "Usuário e senha obrigatórios"}), 400
+        
+        if len(username) < 3:
+            return jsonify({"erro": "Usuário deve ter pelo menos 3 caracteres"}), 400
+        
+        if len(senha) < 4:
+            return jsonify({"erro": "Senha deve ter pelo menos 4 caracteres"}), 400
+        
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        
+        # Verifica se usuário já existe
+        cur.execute("SELECT id FROM usuarios WHERE username = %s", (username,))
+        if cur.fetchone():
+            cur.close()
+            conn.close()
+            return jsonify({"erro": "Usuário já existe"}), 409
+        
+        # Cria usuário
+        cur.execute(
+            "INSERT INTO usuarios (username, senha, email) VALUES (%s, %s, %s) RETURNING id",
+            (username, senha, email)
+        )
+        usuario_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({
+            "sucesso": True,
+            "mensagem": "Usuário criado com sucesso",
+            "usuario_id": usuario_id,
+            "username": username
+        }), 201
+        
+    except Exception as e:
+        print(f"Erro ao registrar: {e}")
+        return jsonify({"erro": str(e)}), 500
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """Faz login do usuário"""
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        senha = data.get('senha', '')
+        
+        if not username or not senha:
+            return jsonify({"erro": "Usuário e senha obrigatórios"}), 400
+        
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute("SELECT id, username, senha FROM usuarios WHERE username = %s", (username,))
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        
+        if not row or row[2] != senha:
+            return jsonify({"erro": "Usuário ou senha inválidos"}), 401
+        
+        return jsonify({
+            "sucesso": True,
+            "usuario_id": row[0],
+            "username": row[1],
+            "mensagem": "Login realizado com sucesso"
+        }), 200
+        
+    except Exception as e:
+        print(f"Erro ao fazer login: {e}")
+        return jsonify({"erro": str(e)}), 500
+
+
+@app.route('/api/auth/usuario/<int:usuario_id>', methods=['GET'])
+def get_usuario(usuario_id):
+    """Retorna dados do usuário"""
+    try:
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute("SELECT id, username, email FROM usuarios WHERE id = %s", (usuario_id,))
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        
+        if not row:
+            return jsonify({"erro": "Usuário não encontrado"}), 404
+        
+        return jsonify({"id": row[0], "username": row[1], "email": row[2]}), 200
+        
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PLANTAS DO USUÁRIO
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.route('/api/usuarios/<int:usuario_id>/plantas', methods=['GET'])
+def listar_plantas_usuario(usuario_id):
+    """Lista plantas do usuário"""
+    try:
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, nome, especie, icone, umidade_minima, umidade_maxima
+            FROM usuarios_plantas
+            WHERE usuario_id = %s
+            ORDER BY criado_em DESC
+        """, (usuario_id,))
+        
+        colunas = [desc[0] for desc in cur.description]
+        plantas = [dict(zip(colunas, row)) for row in cur.fetchall()]
+        cur.close()
+        conn.close()
+        
+        return jsonify({"plantas": plantas, "total": len(plantas)}), 200
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
+@app.route('/api/usuarios/<int:usuario_id>/plantas', methods=['POST'])
+def criar_planta_usuario(usuario_id):
+    """Cria nova planta para o usuário"""
+    try:
+        data = request.get_json()
+        nome = data.get('nome', '').strip()
+        especie = data.get('especie', '').strip()
+        icone = data.get('icone', '🌱')
+        umidade_min = data.get('umidade_minima', 40)
+        umidade_max = data.get('umidade_maxima', 70)
+        
+        if not nome:
+            return jsonify({"erro": "Nome da planta obrigatório"}), 400
+        
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO usuarios_plantas (usuario_id, nome, especie, icone, umidade_minima, umidade_maxima)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """, (usuario_id, nome, especie, icone, umidade_min, umidade_max))
+        
+        planta_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({
+            "sucesso": True,
+            "planta": {"id": planta_id, "nome": nome},
+            "mensagem": "Planta salva com sucesso"
+        }), 201
+        
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
+@app.route('/api/usuarios/<int:usuario_id>/plantas/<int:planta_id>', methods=['PUT'])
+def atualizar_planta_usuario_rota(usuario_id, planta_id):
+    """Atualiza uma planta do usuário"""
+    try:
+        data = request.get_json()
+        nome = data.get('nome', '').strip()
+        especie = data.get('especie', '').strip()
+        icone = data.get('icone', '🌱')
+        umidade_min = data.get('umidade_minima', 40)
+        umidade_max = data.get('umidade_maxima', 70)
+        
+        if not nome:
+            return jsonify({"erro": "Nome da planta obrigatório"}), 400
+        
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE usuarios_plantas
+            SET nome = %s, especie = %s, icone = %s, umidade_minima = %s, umidade_maxima = %s
+            WHERE id = %s AND usuario_id = %s
+        """, (nome, especie, icone, umidade_min, umidade_max, planta_id, usuario_id))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({"sucesso": True, "mensagem": "Planta atualizada"}), 200
+        
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
+@app.route('/api/usuarios/<int:usuario_id>/plantas/<int:planta_id>', methods=['DELETE'])
+def deletar_planta_usuario_rota(usuario_id, planta_id):
+    """Deleta uma planta do usuário"""
+    try:
+        conn = conectar_db()
+        if not conn:
+            return jsonify({"erro": "Erro ao conectar ao banco"}), 500
+        
+        cur = conn.cursor()
+        cur.execute(
+            "DELETE FROM usuarios_plantas WHERE id = %s AND usuario_id = %s",
+            (planta_id, usuario_id)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return jsonify({"sucesso": True, "mensagem": "Planta deletada"}), 200
+        
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+
 # ═══════════════════════════════════════════════════════
 # ROTAS ORIGINAIS (UMIDADE)
 # ═══════════════════════════════════════════════════════
@@ -229,4 +481,6 @@ def ultima():
 
 if __name__ == "__main__":
     garantir_csv()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    debug_mode = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)

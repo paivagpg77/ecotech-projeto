@@ -1,24 +1,27 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "ecotech")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
+# Tenta pegar DATABASE_URL primeiro (Render), senão usa variáveis separadas (local)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def conectar_db():
     """Conecta ao banco de dados PostgreSQL"""
-    return psycopg2.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
+    if DATABASE_URL:
+        # Produção (Render) - usa a URL completa
+        return psycopg2.connect(DATABASE_URL)
+    else:
+        # Local - usa variáveis separadas
+        return psycopg2.connect(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=os.getenv("DB_PORT", "5432"),
+            database=os.getenv("DB_NAME", "ecotech"),
+            user=os.getenv("DB_USER", "postgres"),
+            password=os.getenv("DB_PASSWORD")
+        )
 
 def buscar_plantas_por_nome(nome, idioma='pt'):
     """Busca plantas pelo nome"""
