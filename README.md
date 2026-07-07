@@ -2,7 +2,7 @@
 
 Sistema web completo para monitoramento em tempo real da umidade do solo, com autenticação de usuários e banco de dados de 300+ plantas cadastradas. Desenvolvido com Flask, PostgreSQL e JavaScript puro.
 
-🔗 **Demo ao vivo:** [https://ecotech-projeto.onrender.com](https://ecotech-projeto.onrender.com)
+
 
 ## 🎯 Funcionalidades
 
