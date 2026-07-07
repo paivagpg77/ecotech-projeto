@@ -139,7 +139,7 @@
       <div class="conn-row">
         <div>
           <label for="apiUrl">Endereço da API</label>
-          <input id="apiUrl" value="http://127.0.0.1:5000"/>
+          <input id="apiUrl"/>
         </div>
         <button class="btn btn-green" onclick="conectar()">Conectar</button>
       </div>
@@ -252,7 +252,7 @@
             <h3>Endereço da API</h3>
             <p>URL do servidor Flask com o sensor ESP32</p>
           </div>
-          <input class="config-input" id="cfgApi" value="http://127.0.0.1:5000"/>
+          <input class="config-input" id="cfgApi"/>
         </div>
         <div class="config-row">
           <div class="config-row-info">
@@ -404,5 +404,12 @@
 </style>
 
 <script src="app.js"></script>
+<script>
+  // Preenche os campos de API com a URL atual (dinâmica) ao carregar
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('apiUrl').value = window.location.origin;
+    document.getElementById('cfgApi').value = window.location.origin;
+  });
+</script>
 </body>
 </html>

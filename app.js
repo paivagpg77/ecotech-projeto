@@ -301,9 +301,8 @@ function inicializarBuscaPlantasModal() {
     
     timeoutBuscaModalPlanta = setTimeout(async () => {
       try {
-        // 🔑 BUSCAR DA API (usa a URL atual do site automaticamente)
-        const apiUrl = document.getElementById('cfgApi')?.value || API || window.location.origin;
-        const response = await fetch(`${apiUrl}/api/plantas/buscar?q=${encodeURIComponent(valor)}`);
+        // 🔑 SEMPRE usa a variável API (que já é a URL correta do site)
+        const response = await fetch(`${API}/api/plantas/buscar?q=${encodeURIComponent(valor)}`);
         const data = await response.json();
         
         if (!data.plantas || data.plantas.length === 0) {
