@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import csv
 import os
@@ -13,6 +13,18 @@ app = Flask(__name__)
 CORS(app)
 
 ARQUIVO_CSV = "umidade.csv"
+
+# ═══════════════════════════════════════════════════════
+# ROTAS PARA SERVIR O FRONTEND (HTML/CSS/JS)
+# ═══════════════════════════════════════════════════════
+
+@app.route('/')
+def home():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/<path:filename>')
+def servir_arquivos(filename):
+    return send_from_directory('.', filename)
 
 # ═══════════════════════════════════════════════════════
 # CONFIGURAÇÃO DO BANCO DE DADOS
