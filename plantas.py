@@ -12,9 +12,9 @@ DB_NAME = os.getenv("DB_NAME", "ecotech")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
-# 300 PLANTAS MAIS COMUNS DO NORDESTE BRASILEIRO
+
 PLANTAS_NORDESTE = [
-    # HORTALIÇAS
+    
     ("Tomate", "Solanum lycopersicum", 30, 70),
     ("Alface", "Lactuca sativa", 40, 80),
     ("Cebolinha", "Allium schoenoprasum", 35, 75),
@@ -31,7 +31,7 @@ PLANTAS_NORDESTE = [
     ("Cebola", "Allium cepa", 40, 70),
     ("Alho", "Allium sativum", 35, 65),
     
-    # FRUTAS
+    
     ("Manga", "Mangifera indica", 40, 80),
     ("Goiaba", "Psidium guajava", 45, 80),
     ("Caju", "Anacardium occidentale", 50, 85),
@@ -48,7 +48,7 @@ PLANTAS_NORDESTE = [
     ("Morango", "Fragaria vesca", 30, 70),
     ("Framboesa", "Rubus idaeus", 35, 75),
     
-    # PLANTAS MEDICINAIS
+    
     ("Gengibre", "Zingiber officinale", 45, 80),
     ("Hortelã", "Mentha piperita", 40, 80),
     ("Capim Limão", "Cymbopogon citratus", 45, 80),
@@ -65,7 +65,7 @@ PLANTAS_NORDESTE = [
     ("Sálvia", "Salvia officinalis", 35, 75),
     ("Tansagem", "Plantago major", 40, 80),
     
-    # PLANTAS ORNAMENTAIS
+    
     ("Rosa", "Rosa sp.", 40, 70),
     ("Lírio", "Lilium sp.", 35, 70),
     ("Orquídea", "Orchidaceae", 50, 80),
@@ -82,7 +82,7 @@ PLANTAS_NORDESTE = [
     ("Flor de Maio", "Schlumbergera truncata", 40, 75),
     ("Espada de São Jorge", "Sansevieria trifasciata", 30, 70),
     
-    # PLANTAS ARBÓREAS
+    
     ("Mangueira", "Mangifera indica", 45, 80),
     ("Goiabeira", "Psidium guajava", 45, 80),
     ("Coqueiro", "Cocos nucifera", 70, 95),
@@ -99,7 +99,7 @@ PLANTAS_NORDESTE = [
     ("Algaroba", "Prosopis juliflora", 45, 80),
     ("Aroeira", "Schinus terebinthifolius", 40, 75),
     
-    # PLANTAS DE FIBRA/INDUSTRIAL
+    
     ("Algodão", "Gossypium hirsutum", 45, 80),
     ("Juta", "Corchorus capsularis", 55, 85),
     ("Cânhamo", "Cannabis sativa", 40, 75),
@@ -116,14 +116,14 @@ PLANTAS_NORDESTE = [
     ("Girassol", "Helianthus annuus", 45, 75),
     ("Soja", "Glycine max", 45, 75),
     
-    # PLANTAS AQUÁTICAS/HIDROPÔNICAS
+    
     ("Lentilha de Água", "Lemna minor", 55, 85),
     ("Aguapé", "Eichhornia crassipes", 60, 90),
     ("Lírio d'Água", "Nymphaea sp.", 60, 90),
     ("Potamogeton", "Potamogeton sp.", 50, 80),
     ("Salvínia", "Salvinia auriculata", 55, 85),
     
-    # PLANTAS SUCULENTAS/XERÓFILAS
+   
     ("Cacto Coluna", "Cereus jamacaru", 25, 60),
     ("Mandacaru", "Cereus tetragonus", 25, 60),
     ("Facheiro", "Pilosocereus azureus", 25, 60),
@@ -135,7 +135,7 @@ PLANTAS_NORDESTE = [
     ("Echeveria", "Echeveria elegans", 40, 70),
     ("Jade", "Crassula ovata", 35, 70),
     
-    # PLANTAS NATIVAS DO CAATINGA
+   
     ("Umbu", "Spondias tuberosa", 35, 70),
     ("Licuri", "Syagrus coronata", 50, 85),
     ("Carnaúba", "Copernicia prunifera", 50, 85),
@@ -147,7 +147,7 @@ PLANTAS_NORDESTE = [
     ("Pau d'Arco", "Tabebuia impetiginosa", 40, 75),
     ("Baraúna", "Schinopsis brasiliensis", 35, 70),
     
-    # PLANTAS DE FORRAGEM
+    
     ("Capim Elefante", "Pennisetum purpureum", 50, 85),
     ("Capim Braquiária", "Brachiaria decumbens", 45, 80),
     ("Capim Colonião", "Panicum maximum", 50, 85),
@@ -159,7 +159,7 @@ PLANTAS_NORDESTE = [
     ("Trigo", "Triticum aestivum", 40, 70),
     ("Centeio", "Secale cereale", 35, 70),
     
-    # PLANTAS LEGUMINOSAS
+    
     ("Leucena", "Leucaena leucocephala", 50, 85),
     ("Crotalária", "Crotalaria spectabilis", 45, 80),
     ("Mucuna", "Mucuna pruriens", 55, 85),
@@ -171,7 +171,7 @@ PLANTAS_NORDESTE = [
     ("Cornichão", "Lotus corniculatus", 40, 75),
     ("Visco", "Viscum album", 40, 75),
     
-    # MAIS HORTALIÇAS
+    
     ("Brócolis", "Brassica oleracea", 35, 70),
     ("Couve", "Brassica oleracea", 35, 70),
     ("Repolho", "Brassica oleracea", 35, 70),
@@ -183,14 +183,14 @@ PLANTAS_NORDESTE = [
     ("Radichia", "Cichorium intybus", 40, 75),
     ("Azedinha", "Rumex acetosella", 40, 75),
     
-    # PLANTAS DE TINTA/CORANTE
+    
     ("Anil", "Indigofera tinctoria", 50, 85),
     ("Urucum", "Bixa orellana", 50, 85),
     ("Açafrão", "Crocus sativus", 40, 75),
     ("Paubrasil", "Paubrasilia echinata", 50, 85),
     ("Pau de Tintura", "Tannins spp.", 50, 85),
     
-    # MAIS FRUTAS
+    
     ("Pitanga", "Eugenia uniflora", 50, 85),
     ("Cupuaçu", "Theobroma grandiflorum", 60, 90),
     ("Açaí Branco", "Euterpe precatoria", 60, 90),
@@ -202,7 +202,7 @@ PLANTAS_NORDESTE = [
     ("Pinha", "Annona squamosa", 50, 85),
     ("Graviola", "Annona muricata", 55, 85),
     
-    # PLANTAS AROMÁTICAS/ESPECIARIAS
+    
     ("Cravo da Índia", "Syzygium aromaticum", 60, 90),
     ("Canela", "Cinnamomum verum", 55, 85),
     ("Noz Moscada", "Myristica fragrans", 60, 90),
@@ -214,11 +214,9 @@ PLANTAS_NORDESTE = [
     ("Funcho", "Foeniculum vulgare", 40, 75),
     ("Acarajó", "Momordica charantia", 55, 85),
     
-    # ============================================
-    # PLANTAS DE USO DOMÉSTICO 🏠
-    # ============================================
+ 
     
-    # PLANTAS PARA PURIFICAR AR
+    
     ("Jiboia", "Epipremnum aureum", 45, 80),
     ("Palmeira Areca", "Dypsis lutescens", 50, 85),
     ("Dracena Vermelha", "Dracaena marginata", 40, 75),
@@ -230,7 +228,7 @@ PLANTAS_NORDESTE = [
     ("Singônio", "Syngonium podophyllum", 50, 85),
     ("Hera Inglesa", "Hedera helix", 40, 75),
     
-    # PLANTAS PENDURADAS/VASOS
+   
     ("Pothos", "Epipremnum aureum", 45, 80),
     ("Lágrima de Cristo", "Tradescantia zebrina", 40, 75),
     ("Boca de Tigre", "Fittonia albivenis", 55, 85),
@@ -242,7 +240,7 @@ PLANTAS_NORDESTE = [
     ("Cordifólio", "Aeschynanthus javanica", 55, 85),
     ("Rhoicissus", "Rhoicissus rhomboidea", 50, 80),
     
-    # PLANTAS BAIXAS/BORDADURA 
+   
     ("Peperomia", "Peperomia obtusifolia", 45, 80),
     ("Pilea", "Pilea peperomioides", 45, 80),
     ("Clorofito", "Chlorophytum comosum", 40, 80),
@@ -254,7 +252,7 @@ PLANTAS_NORDESTE = [
     ("Violeta Africana", "Saintpaulia ionantha", 50, 80),
     ("Gloxínia", "Sinningia speciosa", 50, 80),
     
-    # PLANTAS PARA COZINHA
+    
     ("Manjericão", "Ocimum basilicum", 40, 75),
     ("Menta", "Mentha spicata", 40, 80),
     ("Tomilho", "Thymus vulgaris", 35, 70),
@@ -266,7 +264,7 @@ PLANTAS_NORDESTE = [
     ("Lavanda", "Lavandula angustifolia", 30, 70),
     ("Citronela", "Cymbopogon nardus", 50, 85),
     
-    # PLANTAS REPELENTES
+   
     ("Planta Carnívora", "Nepenthes sp.", 60, 85),
     ("Urtiga Mansa", "Morus alba", 45, 80),
     ("Citronela", "Pelargonium graveolens", 45, 75),
@@ -274,7 +272,7 @@ PLANTAS_NORDESTE = [
     ("Arruda", "Ruta graveolens", 40, 75),
     ("Alecrim do Mato", "Rosmarinus officinalis", 30, 70),
     
-    # PLANTAS PARA INTERIOR/SOMBRA
+   
     ("Babosa", "Aloe barbadensis", 30, 70),
     ("Lança de São Jorge", "Sansevieria trifasciata", 30, 70),
     ("Zamioculca", "Zamioculcas zamiifolia", 40, 75),
@@ -286,7 +284,7 @@ PLANTAS_NORDESTE = [
     ("Alocasia", "Alocasia amazonica", 55, 85),
     ("Caládio Branco", "Caladium bicolor", 50, 85),
     
-    # PLANTAS ALTAS/ÁRVORES INTERNAS
+    
     ("Ficus Benjamim", "Ficus benjamina", 45, 80),
     ("Ficus Lira", "Ficus lyrata", 50, 85),
     ("Pau de Água", "Dracaena fragrans", 50, 85),
@@ -298,7 +296,7 @@ PLANTAS_NORDESTE = [
     ("Árvore da Moeda", "Lunaria annua", 40, 75),
     ("Planta da Moeda", "Pilea peperomioides", 45, 80),
     
-    # PLANTAS RESISTENTES/FÁCEIS
+    
     ("Hera Inglesa", "Hedera helix", 40, 75),
     ("Planta Cobra", "Sansevieria trifasciata", 30, 70),
     ("Planta Zíper", "Aeschynanthus radicans", 55, 85),
@@ -310,7 +308,7 @@ PLANTAS_NORDESTE = [
     ("Echevéria", "Echeveria elegans", 40, 70),
     ("Sedum Burrito", "Sedum burrito", 35, 70),
     
-    # PLANTAS CLIMÁTICAS
+   
     ("Jacinto d'Água", "Eichhornia crassipes", 60, 90),
     ("Vitória Régia", "Victoria amazonica", 70, 95),
     ("Nenúfar", "Nymphaea alba", 60, 90),
@@ -324,7 +322,7 @@ PLANTAS_NORDESTE = [
 ]
 
 def conectar_db():
-    """Conecta ao banco de dados PostgreSQL (Render ou local)"""
+   
     if DATABASE_URL:
         return psycopg2.connect(DATABASE_URL)
     else:
@@ -337,7 +335,7 @@ def conectar_db():
         )
 
 def criar_tabela():
-    """Cria tabela se não existir"""
+   
     conn = conectar_db()
     cur = conn.cursor()
     
@@ -371,7 +369,7 @@ def criar_tabela():
     print("✓ Tabela criada/resetada")
 
 def inserir_plantas():
-    """Insere as 300 plantas do Nordeste"""
+    
     conn = conectar_db()
     cur = conn.cursor()
     
@@ -407,7 +405,7 @@ def inserir_plantas():
     print(f"\n✅ {count} plantas do Nordeste inseridas com sucesso!")
 
 def contar_plantas():
-    """Conta total de plantas"""
+   
     conn = conectar_db()
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) FROM plantas_perenual")

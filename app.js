@@ -1,6 +1,3 @@
-// ═══════════════════════════════════════════════════════
-// ESTADO
-// ═══════════════════════════════════════════════════════
 const USUARIOS = { admin: "ecotech" };
 let usuarioLogado = null;
 let API           = window.location.origin;
@@ -12,9 +9,7 @@ let timerBusca    = null;
 let paginaAtual   = "overview";
 let timeoutBuscaModalPlanta;
 
-// ═══════════════════════════════════════════════════════
-// LOGIN
-// ═══════════════════════════════════════════════════════
+
 document.getElementById("loginPass").addEventListener("keydown", e => { if(e.key==="Enter") fazerLogin(); });
 document.getElementById("loginUser").addEventListener("keydown", e => { if(e.key==="Enter") fazerLogin(); });
 
@@ -49,9 +44,7 @@ function logout() {
   document.getElementById("loginPass").value = ""; 
 }
 
-// ═══════════════════════════════════════════════════════
-// NAVEGAÇÃO
-// ═══════════════════════════════════════════════════════
+
 const titulos = {
   overview:  ["Visão Geral",    "Resumo do sistema"],
   dashboard: ["Dashboard",      "Leituras e gráficos"],
@@ -84,9 +77,7 @@ function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("open");
 }
 
-// ═══════════════════════════════════════════════════════
-// API
-// ═══════════════════════════════════════════════════════
+
 function conectar() {
   API = document.getElementById("apiUrl").value.trim().replace(/\/$/,"");
   document.getElementById("cfgApi").value = API;
@@ -134,9 +125,7 @@ async function buscar() {
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// VISÃO GERAL
-// ═══════════════════════════════════════════════════════
+
 function atualizarOverview(vals, atual) {
   if (atual !== undefined) document.getElementById("ovAtual").innerHTML = atual.toFixed(1)+'<span class="ov-unit">%</span>';
   document.getElementById("ovTotal").textContent = dadosGlobais.length;
@@ -150,9 +139,7 @@ function atualizarOverview(vals, atual) {
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// STATS CARDS
-// ═══════════════════════════════════════════════════════
+
 function renderStats(dados) {
   if (!dados.length) return;
   const vals  = dados.map(d=>parseFloat(d.umidade)).filter(v=>!isNaN(v));
@@ -183,9 +170,7 @@ function renderStats(dados) {
   `;
 }
 
-// ═══════════════════════════════════════════════════════
-// GRÁFICO (reutilizável para 3 canvas)
-// ═══════════════════════════════════════════════════════
+
 function renderGrafico(dados, canvasId, comFaixaIdeal=false) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
@@ -259,9 +244,7 @@ function renderGrafico(dados, canvasId, comFaixaIdeal=false) {
     + (comFaixaIdeal && plantaAtiva ? `<span><span class="legend-dot" style="background:rgba(74,222,128,.4)"></span>Faixa ideal (${plantaAtiva.min}%–${plantaAtiva.max}%)</span>` : "");
 }
 
-// ═══════════════════════════════════════════════════════
-// TABELA
-// ═══════════════════════════════════════════════════════
+
 function renderTabela(dados) {
   if (!dados.length) { document.getElementById("tabelaDiv").innerHTML='<p class="empty">Sem dados</p>'; return; }
   const ultimas=[...dados].reverse().slice(0,15);
@@ -279,9 +262,7 @@ function renderTabela(dados) {
   document.getElementById("tabelaDiv").innerHTML=html;
 }
 
-// ═══════════════════════════════════════════════════════
-// PLANTAS - INTEGRAÇÃO BUSCA DO BANCO
-// ═══════════════════════════════════════════════════════
+
 
 function inicializarBuscaPlantasModal() {
   const inputBusca = document.getElementById('mBuscaPlanta');

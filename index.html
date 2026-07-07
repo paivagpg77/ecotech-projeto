@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<!-- LOGIN -->
+
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
@@ -31,10 +31,10 @@
   </div>
 </div>
 
-<!-- APP SHELL -->
+
 <div id="appShell">
 
-  <!-- SIDEBAR -->
+ 
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">
@@ -82,10 +82,10 @@
     </div>
   </nav>
 
-  <!-- MAIN -->
+  
   <div class="main">
 
-    <!-- TOPBAR -->
+    
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
         <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
@@ -102,7 +102,7 @@
       </div>
     </div>
 
-    <!-- PAGE: VISÃO GERAL -->
+    
     <div class="page active" id="page-overview">
       <div class="overview-grid" id="ovGrid">
         <div class="overview-card">
@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    <!-- PAGE: DASHBOARD -->
+   
     <div class="page" id="page-dashboard">
       <div class="section-title">Conexão</div>
       <div class="conn-row">
@@ -243,7 +243,7 @@
       </div>
     </div>
 
-    <!-- PAGE: CONFIGURAÇÕES -->
+   
     <div class="page" id="page-config">
       <div class="section-title">API</div>
       <div class="card config-section">
@@ -297,15 +297,15 @@
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /appShell -->
+  </div>
+</div>
 
-<!-- MODAL PLANTA -->
+
 <div class="modal-overlay" id="modalPlanta">
   <div class="modal">
     <h2>🌿 Cadastrar nova planta</h2>
     
-    <!-- BUSCA NO BANCO -->
+ 
     <div class="form-group">
       <label>🔍 Buscar planta no banco de dados</label>
       <div style="position:relative">
@@ -405,7 +405,7 @@
 
 <script src="app.js"></script>
 <script>
-  // Preenche os campos de API com a URL atual (dinâmica) ao carregar
+
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('apiUrl').value = window.location.origin;
     document.getElementById('cfgApi').value = window.location.origin;
