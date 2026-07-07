@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════
 const USUARIOS = { admin: "ecotech" };
 let usuarioLogado = null;
-let API           = "http://127.0.0.1:5000";
+let API           = window.location.origin;
 let dadosGlobais  = [];
 let plantas       = [];
 let plantaAtiva   = null;
@@ -301,8 +301,8 @@ function inicializarBuscaPlantasModal() {
     
     timeoutBuscaModalPlanta = setTimeout(async () => {
       try {
-        // 🔑 BUSCAR DA API (não Perenual, mas da nossa rota!)
-        const apiUrl = document.getElementById('cfgApi')?.value || API || 'http://127.0.0.1:5000';
+        // 🔑 BUSCAR DA API (usa a URL atual do site automaticamente)
+        const apiUrl = document.getElementById('cfgApi')?.value || API || window.location.origin;
         const response = await fetch(`${apiUrl}/api/plantas/buscar?q=${encodeURIComponent(valor)}`);
         const data = await response.json();
         
