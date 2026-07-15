@@ -282,7 +282,6 @@ function inicializarBuscaPlantasModal() {
     
     timeoutBuscaModalPlanta = setTimeout(async () => {
       try {
-        // 🔑 SEMPRE usa a variável API (que já é a URL correta do site)
         const response = await fetch(`${API}/api/plantas/buscar?q=${encodeURIComponent(valor)}`);
         const data = await response.json();
         
@@ -710,3 +709,21 @@ function selecionarPlantaMon(id) {
 }
  
 function gerarPDFMonitor() { gerarPDF(); }
+
+// ═══════════════════════════════════════════════════════
+// MOBILE: fecha o menu lateral ao tocar fora dele
+// ═══════════════════════════════════════════════════════
+document.addEventListener('click', (e) => {
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  if (!sidebar || !hamburger) return;
+  if (window.innerWidth > 640) return;
+  if (!sidebar.classList.contains('open')) return;
+
+  const clicouDentroSidebar = sidebar.contains(e.target);
+  const clicouNoHamburger = hamburger.contains(e.target);
+
+  if (!clicouDentroSidebar && !clicouNoHamburger) {
+    sidebar.classList.remove('open');
+  }
+});
